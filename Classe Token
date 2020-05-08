@@ -1,1 +1,156 @@
+#include "token.hpp"
+#include <iostream>
+using namespace std;
+
+token::token()
+{
+	x=0;
+}
+
+token::token(int i)
+{
+	x=i;
+}
+
+token::token(bool B)
+{
+	b=B;
+}
+
+token::token(string S)
+{
+	s=S;
+}
+
+token::token(const char s[])
+{
+	a=s;
+}
+
+token::token(const token &t)
+{
+	x=t.x;
+	b=t.b;
+	s=t.s;
+	a=t.a;
+}
+
+token token::operator=(const token &e)
+{
+	x=e.x;
+	b=e.b;
+	s=e.s;
+	a=e.a;		
+}
+
+token::~token()
+{}
+
+bool es_operador_unari() const;
+{
+	bool b1;	
+	if(s=="not") b=true;
+	else	b=false;	
+}
+
+bool es_operador_binari() const;
+{
+	bool b1;
+	if(s=="and" or s=="or") b1=true;
+	else b1=false;
+	return b1;
+}
+
+bool es_operador_commutatiu() const;
+{
+	b1;
+	if(a=='*' or a=='+')b1=true;
+	else b1=false;	
+	return b1;
+}
+
+bool es_boolea() const;
+{
+	bool b1;
+	if(b1==false or b1==true )b1=true;
+	else b1=false;	
+	return b1;
+}
+
+bool es_enter()	const;
+{
+	bool b1;
+	if(x>=0)
+	return b1;
+}
+
+bool es_variable() const;
+{
+	bool b1;	
+	if
+
+}
+
+pair<int,bool> prioriatat() const;
+{
+
+}
+
+int to_int() const;
+{
+
+}
+
+bool to_bool() const;
+    
+// Pre:  El p.i. és un token booleà
+    // Post: Retorna el valor booleà true o false del p.i.
+{
+
+}
+    string to_string() const;
+    // Pre: true
+    // Post: Retorna el valor del p.i. convertit en string
+{
+
+}
+    bool operator==(const token &t) const;
+    // Pre: t = TK
+    // Post: Indica si el token del p.i. és igual al token TK
+{
+
+}
+    bool operator!=(const token &t) const;
+    // Pre: t = TK
+    // Post: Indica si el token del p.i. és diferent al token TK
+{
+
+}
+    friend istream& operator>>(istream& is, token &t);
+    // Pre: El canal is conté un string amb un contingut d'un token TK
+    // Post: t = TK
+{
+
+}
+    friend ostream& operator<<(ostream& os, const token &t);
+    // Pre: t = TK
+    // Post: S'ha escrit al canal os el contingut del token TK
+{
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
