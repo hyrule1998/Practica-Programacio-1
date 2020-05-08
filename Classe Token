@@ -79,25 +79,38 @@ bool es_boolea() const;
 
 bool es_enter()	const;
 {
+	//TO DO
 	bool b1;
-	if(x>=0)
-	return b1;
+	
 }
 
 bool es_variable() const;
 {
-	bool b1;	
-	if
-
+	/*per que sigui una variable ha de ser: enter, char, bool or string */
+	
+	if (s!="or" or s!="and" or s!="not") and ( s[0]>='a' and s[0]<'z' ) b1=true;
+		
+	else b1=false;
+			
+return b1;
 }
 
 pair<int,bool> prioriatat() const;
-{
+{	//TO DO
+	int x;
+	bool b1=true;
+	//irst
+		b1=true;
+	//econd
+		b1=false;
 
+return (x,b1);
 }
 
 int to_int() const;
 {
+	return x;
+	
 
 }
 
@@ -106,18 +119,21 @@ bool to_bool() const;
 // Pre:  El p.i. és un token booleà
     // Post: Retorna el valor booleà true o false del p.i.
 {
-
+	return b;
+	
 }
     string to_string() const;
     // Pre: true
     // Post: Retorna el valor del p.i. convertit en string
 {
-
+	return s;
+	
 }
     bool operator==(const token &t) const;
     // Pre: t = TK
     // Post: Indica si el token del p.i. és igual al token TK
 {
+ 	
 
 }
     bool operator!=(const token &t) const;
