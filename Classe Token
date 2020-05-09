@@ -96,15 +96,18 @@ return b1;
 }
 
 pair<int,bool> prioriatat() const;
-{	//TO DO
-	int x;
-	bool b1=true;
-	//irst
-		b1=true;
-	//econd
-		b1=false;
+{	
+	int y;
+	bool b1;
+	if(s=="**"){ y=7;b1=false;}
+	if(s=="*" or s=="/" or s=="%"){ y=6;b1=true;}
+	if(s=="+" or s=="-"){ y=5;b1=true;}
+	if(s=="==" or s=="!="){ y=4;b1=true;}
+	if(s=="not"){y=3;b1=false;}
+	if(s=="and"){y=2;b1=true;}
+	if(s=="or"){y=1;b1=true;}
 
-return (x,b1);
+return y,b1;
 }
 
 int to_int() const;
@@ -133,26 +136,29 @@ bool to_bool() const;
     // Pre: t = TK
     // Post: Indica si el token del p.i. és igual al token TK
 {
- 	
-
+	bool b1;
+ 	if(x==t.x or a==t.x or s==t.s or b==b.s) b1=true;
+	else b1=false;
 }
     bool operator!=(const token &t) const;
     // Pre: t = TK
     // Post: Indica si el token del p.i. és diferent al token TK
 {
-
+	bool b1;
+ 	if(x!=t.x or a!=t.x or s!=t.s or b!=b.s) b1=true;
+	else b1=false;
 }
     friend istream& operator>>(istream& is, token &t);
     // Pre: El canal is conté un string amb un contingut d'un token TK
     // Post: t = TK
 {
-
+	is>>t.a;
 }
     friend ostream& operator<<(ostream& os, const token &t);
     // Pre: t = TK
     // Post: S'ha escrit al canal os el contingut del token TK
 {
-
+	os<<t.a;
 }
 
 
