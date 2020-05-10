@@ -1,30 +1,44 @@
 #include "token.hpp"
 #include <iostream>
+#include <cstring>
+#include <string>
+#include <sstream>
 using namespace std;
 
 token::token()
 {
 	x=0;
+	aux=1;
+	s='0';
 }
 
 token::token(int i)
 {
 	x=i;
+	aux=1;
+	stringstream a1;
+	a1<<x<<endl;
+	s=a1.str();
 }
 
 token::token(bool B)
 {
 	b=B;
+	if(b==true) s='T';
+	else s='F';
+	aux=2;
 }
 
 token::token(string S)
 {
 	s=S;
+	aux=3;
 }
 
 token::token(const char s[])
-{
-	a=s;
+{	
+	for(int i=0;i<strlen(s);i++) a[i]=s[i];
+	aux=4;
 }
 
 token::token(const token &t)
@@ -32,7 +46,7 @@ token::token(const token &t)
 	x=t.x;
 	b=t.b;
 	s=t.s;
-	a=t.a;
+	for(int i=0;i<strlen(t.a);i++) a[i]=t.a[i];
 }
 
 token token::operator=(const token &e)
@@ -40,65 +54,73 @@ token token::operator=(const token &e)
 	x=e.x;
 	b=e.b;
 	s=e.s;
-	a=e.a;		
+	for(int i=0;i<strlen(e.a);i++) a[i]=e.a[i];
+return e;	
 }
 
 token::~token()
 {}
 
-bool es_operador_unari() const;
+bool token::es_operador_unari() const
 {
-	bool b1;	
-	if(s=="not") b=true;
-	else	b=false;	
+	bool b1=false;
+	if(aux!=3){
+		if(s=="not") b1=true;
+	}	
+return b1;
 }
 
-bool es_operador_binari() const;
+bool token::es_operador_binari() const
 {
 	bool b1;
 	if(s=="and" or s=="or") b1=true;
 	else b1=false;
-	return b1;
+return b1;
 }
 
-bool es_operador_commutatiu() const;
+bool token::es_operador_commutatiu() const
 {
-	b1;
-	if(a=='*' or a=='+')b1=true;
+	bool b1;
+	if(a[0]=='*' or a[0]=='+')b1=true;
 	else b1=false;	
 	return b1;
 }
 
-bool es_boolea() const;
+bool token::es_boolea() const
 {
-	bool b1;
-	if(b1==false or b1==true )b1=true;
-	else b1=false;	
+	bool b1=false;
+	if(aux==2){
+		b1=true;
+	}	
 	return b1;
 }
 
-bool es_enter()	const;
+bool token::es_enter()	const
 {
-	//TO DO
-	bool b1;
+	bool b1=false;
+	if(aux==1){
+		b1=true;
+	}	
+	return b1;
 	
 }
 
-bool es_variable() const;
+bool token::es_variable() const
 {
 	/*per que sigui una variable ha de ser: enter, char, bool or string */
+	bool b1;
 	
-	if (s!="or" or s!="and" or s!="not") and ( s[0]>='a' and s[0]<'z' ) b1=true;
+	if ((s!="or" or s!="and" or s!="not") and ( s[0]>='a' and s[0]<'z' )) b1=true;
 		
 	else b1=false;
 			
 return b1;
 }
 
-pair<int,bool> prioriatat() const;
+pair<int, bool> token::prioritat() const
 {	
-	int y;
-	bool b1;
+	int y=8;
+	bool b1=true;
 	if(s=="**"){ y=7;b1=false;}
 	if(s=="*" or s=="/" or s=="%"){ y=6;b1=true;}
 	if(s=="+" or s=="-"){ y=5;b1=true;}
@@ -107,17 +129,17 @@ pair<int,bool> prioriatat() const;
 	if(s=="and"){y=2;b1=true;}
 	if(s=="or"){y=1;b1=true;}
 
-return y,b1;
+return make_pair(y,b1);
 }
 
-int to_int() const;
+int token::to_int() const
 {
 	return x;
 	
 
 }
 
-bool to_bool() const;
+bool token::to_bool() const
     
 // Pre:  El p.i. és un token booleà
     // Post: Retorna el valor booleà true o false del p.i.
@@ -125,47 +147,51 @@ bool to_bool() const;
 	return b;
 	
 }
-    string to_string() const;
+    string token::to_string() const
     // Pre: true
     // Post: Retorna el valor del p.i. convertit en string
 {
 	return s;
 	
 }
-    bool operator==(const token &t) const;
+    bool token::operator==(const token &t) const
     // Pre: t = TK
     // Post: Indica si el token del p.i. és igual al token TK
 {
 	bool b1;
- 	if(x==t.x or a==t.x or s==t.s or b==b.s) b1=true;
+ 	if(x==t.x or a==t.a or s==t.s or b==t.b) b1=true;
 	else b1=false;
+	return b1;
 }
-    bool operator!=(const token &t) const;
+    bool token::operator!=(const token &t) const
     // Pre: t = TK
     // Post: Indica si el token del p.i. és diferent al token TK
 {
 	bool b1;
- 	if(x!=t.x or a!=t.x or s!=t.s or b!=b.s) b1=true;
+ 	if(x!=t.x or a!=t.a or s!=t.s or b!=t.b) b1=true;
 	else b1=false;
+	return b1;
 }
-    friend istream& operator>>(istream& is, token &t);
+    istream& operator>>(istream& is, token &t)
     // Pre: El canal is conté un string amb un contingut d'un token TK
     // Post: t = TK
 {
-	is>>t.a;
+	is>>t.s;
+	return is;
 }
-    friend ostream& operator<<(ostream& os, const token &t);
+    ostream& operator<<(ostream& os, const token &t)
     // Pre: t = TK
     // Post: S'ha escrit al canal os el contingut del token TK
 {
-	os<<t.a;
+	if(t.aux==1)os<<t.x;
+	if(t.aux==2){ 
+		if(t.b==true)os<<"T"; 
+		else os<<"F";
+		}
+	if(t.aux==3)os<<t.s;
+	if(t.aux==4)for(int i=0;i<strlen(t.a);i++) os<<t.a[i];
+	return os;
 }
-
-
-
-
-
-
 
 
 
