@@ -35,6 +35,12 @@ token::token(string S)
 {
 	s=S;
 	aux=3;
+	if(S=="T"){ b=true; aux=2;}
+	else if(S=="F"){ b=false; aux=2;}
+	else if(S[0]=='0' or S[0]=='1' or S[0]=='2' or S[0]=='3' or S[0]=='4' or S[0]=='5' or S[0]=='6' or S[0]=='7' or S[0]=='8' or S[0]=='9'){aux=1; x=stoi(s);}
+	else if(S[0]=='-'){if(S[1]=='0' or S[1]=='1' or S[1]=='2' or S[1]=='3' or S[1]=='4' or S[1]=='5' or S[1]=='6' or S[1]=='7' or S[1]=='8' or S[1]=='9'){aux=1; x=stoi(s);}}
+	
+	
 }
 
 token::token(const char s[])
@@ -51,13 +57,13 @@ token::token(const token &t)
 	for(int i=0;i<strlen(t.a);i++) a[i]=t.a[i];
 }
 
-token token::operator=(const token &e)
+token& token::operator=(const token &e)
 {
-	x=e.x;
-	b=e.b;
-	s=e.s;
-	for(int i=0;i<strlen(e.a);i++) a[i]=e.a[i];
-return e;	
+	this->x=e.x;
+	this->b=e.b;
+	this->s=e.s;
+	this->aux=e.aux;
+return (*this);	
 }
 
 token::~token()
@@ -66,7 +72,7 @@ token::~token()
 bool token::es_operador_unari() const
 {
 	bool b1=false;
-	if(aux!=3){
+	if(aux==3){
 		if(s=="not") b1=true;
 	}	
 return b1;
@@ -75,7 +81,7 @@ return b1;
 bool token::es_operador_binari() const
 {
 	bool b1;
-	if(s=="and" or s=="or") b1=true;
+	if(s=="and" or s=="or" or s=="==" or s=="!=" or s=="+" or s=="-" or s=="*" or s=="/" or s=="%" or s=="**") b1=true;
 	else b1=false;
 return b1;
 }
@@ -83,7 +89,7 @@ return b1;
 bool token::es_operador_commutatiu() const
 {
 	bool b1;
-	if(a[0]=='*' or a[0]=='+')b1=true;
+	if(s=="*" or s=="+" or s=="and" or s=="or" or s=="==" or s=="!=")b1=true;
 	else b1=false;	
 	return b1;
 }
@@ -110,11 +116,10 @@ bool token::es_enter()	const
 bool token::es_variable() const
 {
 	/*per que sigui una variable ha de ser: enter, char, bool or string */
-	bool b1;
+	bool b1=false;
 	
-	if ((s!="or" or s!="and" or s!="not") and ( s[0]>='a' and s[0]<'z' )) b1=true;
-		
-	else b1=false;
+	if (s=="or" or s=="and" or s=="not")b1=false;
+	else if(s[0]>='a' and s[0]<='z') b1=true;
 			
 return b1;
 }
@@ -161,10 +166,10 @@ bool token::to_bool() const
     // Post: Indica si el token del p.i. és igual al token TK
 {
 	bool b1=false;
- 	if(x==t.x and aux==1)b1=true;
-	if(b==t.b and aux==2)b1=true;
-	if(s==t.s and aux==3)b1=true;
-	if(a==t.a and aux==4)b1=true;
+ 	if(x==t.x and aux==1 and t.aux==1)b1=true;
+	if(b==t.b and aux==2 and t.aux==2)b1=true;
+	if(s==t.s and aux==3 and t.aux==3)b1=true;
+	if(a==t.a and aux==4 and t.aux==4)b1=true;
 	if(aux==3 and t.aux==4){b1=true; for(int i=0;i<s.size();i++) if(s[i]!=a[i]) b1=false;}
 	if(aux==4 and t.aux==3){b1=true; for(int i=0;i<s.size();i++) if(s[i]!=a[i]) b1=false;}
 	return b1;
@@ -176,9 +181,12 @@ bool token::to_bool() const
 {
 	bool b1=false;
  	if(x!=t.x and aux==1 and t.aux==1)b1=true;
-	if(a!=t.a and aux==4 and t.aux==4)b1=true;
-	if(s!=t.s and aux==3 and t.aux==3)b1=true;
 	if(b!=t.b and aux==2 and t.aux==2)b1=true;
+	if(s!=t.s and aux==3 and t.aux==3)b1=true;
+	if(a!=t.a and aux==4 and t.aux==4)b1=true;
+	if(aux==3 and t.aux==4){b1=true; for(int i=0;i<s.size();i++) if(s[i]==a[i]) b1=false;}
+	if(aux==4 and t.aux==3){b1=true; for(int i=0;i<s.size();i++) if(s[i]==a[i]) b1=false;}
+	if(aux!=t.aux) b1=true;
 	return b1;
 }
     istream& operator>>(istream& is, token &t)
@@ -186,11 +194,6 @@ bool token::to_bool() const
     // Post: t = TK
 {
 	is>>t.s;
-	for(int i=0;i<t.s.size();i++) t.a[i]=t.s[i];
-	if(t.s=="T") t.b=true;
-	if(t.s=="F") t.b=false;
-	if(t.s[0]=="0" or t.s[0]=="1" or t.s[0]=="2" or t.s[0]=="3" or t.s[0]=="4" or t.s[0]=="5" or t.s[0]=="6" or t.s[0]=="7" or t.s[0]=="8" or t.s[0]=="9") t.x=stoi(t.s);
-	else t.x=atoi(t.a);
 	return is;
 }
     ostream& operator<<(ostream& os, const token &t)
