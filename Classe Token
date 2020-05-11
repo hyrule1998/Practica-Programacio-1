@@ -3,6 +3,8 @@
 #include <cstring>
 #include <string>
 #include <sstream>
+#include <stdlib.h>
+
 using namespace std;
 
 token::token()
@@ -158,18 +160,25 @@ bool token::to_bool() const
     // Pre: t = TK
     // Post: Indica si el token del p.i. és igual al token TK
 {
-	bool b1;
- 	if(x==t.x or a==t.a or s==t.s or b==t.b) b1=true;
-	else b1=false;
+	bool b1=false;
+ 	if(x==t.x and aux==1)b1=true;
+	if(b==t.b and aux==2)b1=true;
+	if(s==t.s and aux==3)b1=true;
+	if(a==t.a and aux==4)b1=true;
+	if(aux==3 and t.aux==4){b1=true; for(int i=0;i<s.size();i++) if(s[i]!=a[i]) b1=false;}
+	if(aux==4 and t.aux==3){b1=true; for(int i=0;i<s.size();i++) if(s[i]!=a[i]) b1=false;}
 	return b1;
 }
+
     bool token::operator!=(const token &t) const
     // Pre: t = TK
     // Post: Indica si el token del p.i. és diferent al token TK
 {
-	bool b1;
- 	if(x!=t.x or a!=t.a or s!=t.s or b!=t.b) b1=true;
-	else b1=false;
+	bool b1=false;
+ 	if(x!=t.x and aux==1 and t.aux==1)b1=true;
+	if(a!=t.a and aux==4 and t.aux==4)b1=true;
+	if(s!=t.s and aux==3 and t.aux==3)b1=true;
+	if(b!=t.b and aux==2 and t.aux==2)b1=true;
 	return b1;
 }
     istream& operator>>(istream& is, token &t)
@@ -177,6 +186,11 @@ bool token::to_bool() const
     // Post: t = TK
 {
 	is>>t.s;
+	for(int i=0;i<t.s.size();i++) t.a[i]=t.s[i];
+	if(t.s=="T") t.b=true;
+	if(t.s=="F") t.b=false;
+	if(t.s[0]=="0" or t.s[0]=="1" or t.s[0]=="2" or t.s[0]=="3" or t.s[0]=="4" or t.s[0]=="5" or t.s[0]=="6" or t.s[0]=="7" or t.s[0]=="8" or t.s[0]=="9") t.x=stoi(t.s);
+	else t.x=atoi(t.a);
 	return is;
 }
     ostream& operator<<(ostream& os, const token &t)
@@ -187,18 +201,10 @@ bool token::to_bool() const
 	if(t.aux==2){ 
 		if(t.b==true)os<<"T"; 
 		else os<<"F";
-		}
+	}
 	if(t.aux==3)os<<t.s;
 	if(t.aux==4)for(int i=0;i<strlen(t.a);i++) os<<t.a[i];
 	return os;
 }
-
-
-
-
-
-
-
-
 
 
