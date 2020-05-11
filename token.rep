@@ -1,0 +1,9 @@
+
+	private:
+		int x;
+		int aux;
+		bool b;
+		string s;
+		char a[];
+		
+	public:
