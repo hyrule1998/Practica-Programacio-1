@@ -1,0 +1,5 @@
+private:
+		token T;							
+		arbreBin<Token> a;				
+	public:
+		
